@@ -6,7 +6,7 @@ dotenv.config();
 
 cloudinary.config({ 
     cloud_name: 'diwmlqcru', 
-    api_key: '899923116237535', 
+    api_key: process.env.API_KEY, 
     api_secret: process.env.API_SECRET as string
 });
 const uploadFile = async (file: Express.Multer.File, res: Response) => {

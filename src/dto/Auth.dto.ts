@@ -13,5 +13,5 @@ blogTitle:string,
 blogImage:string, 
 blogBody:string,
 comments:string,
-likes:string
+likes:number
 }

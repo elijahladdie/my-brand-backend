@@ -4,7 +4,7 @@ import { CreateBlogPayload } from '../dto/Auth.dto';
 import uploadFile from '../utility/cloudinary';
 
 export const CreateBlog = async (req: Request, res: Response, next: NextFunction) => {
-    const { blogTitle, blogBody, comments, likes } = req.body as CreateBlogPayload;
+    const { blogTitle, blogBody, comments,  } = req.body as CreateBlogPayload;
     const existingBlog = await Blog.findOne({ blogTitle });
     if (existingBlog) {
         return res.json({ "Message": "Blog already exists" });
@@ -16,14 +16,26 @@ export const CreateBlog = async (req: Request, res: Response, next: NextFunction
     const blogImage: any = await uploadFile(req.file, res)
 
     const CreatedBlog = await Blog.create({
-        blogTitle, blogBody, comments, likes, blogImage: blogImage.secure_url
+        blogTitle, blogBody, comments, likes:0, blogImage: blogImage.secure_url
     });
-    return res.json(CreatedBlog);
+    return res.json({ message: "Blog Created successfully",CreatedBlog});
 }
 
-
 export const GetBlog = async (req: Request, res: Response, next: NextFunction) => {
+    const { blog_id } = req.params
+    if (blog_id) {
+        try {
+            const blog = await Blog.findOne({ _id: blog_id });
 
+            if (!blog) {
+
+                return res.status(200).json({ message: "No Blog Found", blog });
+            }
+            return res.status(200).json({ message: "Blog fetched successfully", blog });
+        } catch (error) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    }
     try {
         const blog = await Blog.find();
 
@@ -37,44 +49,42 @@ export const GetBlog = async (req: Request, res: Response, next: NextFunction) =
     }
 };
 
+export const updateBlog = async (req: Request, res: Response, next: NextFunction) => {
+    const { blog_id } = req.params;
+    const { blogTitle, blogBody, comments, likes } = req.body as CreateBlogPayload; 
+    const existingBlog: any = await Blog.findById(blog_id);
+    if (!existingBlog) {
+        return res.status(404).json({ "Message": "Blog not found" });
+    }
 
+    try {
+        if (blogTitle) existingBlog.blogTitle = blogTitle;
+        if (blogBody) existingBlog.blogBody = blogBody;
+        if (comments) existingBlog.comments.push(comments);
+        if (likes) existingBlog.likes += Number(likes);
 
+        if (req.file) {
+            const blogImage: any = await uploadFile(req.file, res);
+            existingBlog.blogImage = blogImage.secure_url;
+        }
+        const updatedBlog = await Blog.findByIdAndUpdate({ _id: blog_id }, existingBlog, { new: true })
+        return res.json({ message: "Blog updated successfully",updatedBlog});
+    } catch (error) {
+        return res.status(500).json({ "Message": "Internal server error" });
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-// import { Request, Response, NextFunction } from 'express';
-
-// export const createBlog = async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         // Extract blog data from request body
-//         const { blogTitle, blogImage, blogBody, comments, likes } = req.body;
-
-//         // Create a new blog document
-//         const newBlog = new BlogModel({
-//             blogTitle,
-//             blogImage,
-//             blogBody,
-//             comments: comments || [], // Initialize to empty array if not provided
-//             likes: likes || [], // Initialize to empty array if not provided
-//         });
-
-//         // Save the blog document to the database
-//         await newBlog.save();
-
-//         // Respond with the newly created blog
-//         return res.status(201).json(newBlog);
-//     } catch (error) {
-//         // Handle errors
-//         console.error("Error creating blog:", error);
-//         return res.status(500).json({ message: "Internal server error" });
-//     }
-// };
+export const deleteBlog = async (req: Request, res: Response,) => {
+    const { blog_id } = req.params;
+    try {
+        const blog = await Blog.findOneAndDelete({ _id: blog_id });
+        if (!blog) {
+            return res.status(401).json({ message: "Blog not Found" });
+        }
+        res.status(201).json({
+            message: "Blog successful removed!",
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error });
+    }
+};
