@@ -5,7 +5,7 @@ interface BlogDoc extends Document {
     blogImage: string;
     blogBody: string;
     comments:[string];
-    likes:[number];
+    likes:number;
 }
 
 const BlogSchema: Schema = new Schema({
@@ -13,7 +13,7 @@ const BlogSchema: Schema = new Schema({
     blogImage: { type: String, required: true },
     blogBody: { type: String, required: true },
     comments: [{ type: String }],
-    likes: [{ type: Number }],
+    likes: { type: Number },
 }, { timestamps: true });;
 
 export const Blog = mongoose.model<BlogDoc>('Blog', BlogSchema);

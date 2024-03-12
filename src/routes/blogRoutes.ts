@@ -1,14 +1,16 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { CreateBlog, GetBlog } from '../controllers/blogController';
+import { CreateBlog, GetBlog, deleteBlog, updateBlog } from '../controllers/blogController';
 import upload from '../utility/multer';
+import isAuthenticated from '../utility/VerifyToken';
+import { CreateBlogValidationError } from '../validations/BlogValidation';
 
 const router = express.Router();
+router.use(isAuthenticated)
+router.post('/create', upload.single("blogImage"),CreateBlogValidationError ,CreateBlog);
 
-router.post('/create', upload.single("blogImage"), CreateBlog);
+router.put('/update/:blog_id',upload.single("blogImage"),updateBlog);
 
-router.put('/update/:blog_id',GetBlog);
-
-router.delete('/delete/:blog_id', GetBlog);
+router.delete('/delete/:blog_id', deleteBlog);
 
 router.get('/all', GetBlog);
 

@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { Admin } from '../models/Admin'; // Assuming Admin is your Mongoose model
+import { Admin } from '../models/Admin'; 
 import { GeneratePassword, GenerateSalt, comparePassword } from '../utility/passwordUtility';
-import { CreateAuthPayload } from '../dto/Auth.dto'; // Assuming you have defined these interfaces
+import { CreateAuthPayload } from '../dto/Auth.dto'; 
 import { signToken } from '../utility/Authentication';
 
 
-export const CreateAdmin = async (req: Request, res: Response, next: NextFunction) => {
+export const RegisterAdmin = async (req: Request, res: Response, next: NextFunction) => {
     const { email, fullName, password, recoveryPassword } = req.body as CreateAuthPayload;
     const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
@@ -25,7 +25,7 @@ export const CreateAdmin = async (req: Request, res: Response, next: NextFunctio
     });
 
 
-    return res.json(CreatedAdmin);
+    return res.status(201).json({ message: " New admin registered",CreatedAdmin});
 }
 
 export const Login = async (req: Request, res: Response, next: NextFunction) => {
