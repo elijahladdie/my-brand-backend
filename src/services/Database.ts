@@ -1,10 +1,7 @@
 
 import mongoose from 'mongoose';
 import { MONGO_DB } from '../configs';
-
-
 export default async () => {
-
     try {
         await mongoose.connect(MONGO_DB).then(result => {
             console.log("DB connected");

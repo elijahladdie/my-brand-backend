@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { CreateBlog, GetBlog, deleteBlog, likeBlog, updateBlog } from '../controllers/blogController';
+import { CreateBlog, GetBlog, createComment, deleteBlog, likeBlog, updateBlog } from '../controllers/blogController';
 import upload from '../utility/multer';
 import isAuthenticated from '../utility/VerifyToken';
 import { CreateBlogValidationError } from '../validations/BlogValidation';
@@ -10,7 +10,7 @@ router.post('/create', upload.single("blogImage"),CreateBlogValidationError ,Cre
 
 router.put('/update/:blog_id',upload.single("blogImage"),updateBlog);
 router.put('/like/:blog_id',likeBlog);
-
+router.post('/:blog_id/comment',createComment);
 router.delete('/delete/:blog_id', deleteBlog);
 
 router.get('/all', GetBlog);
