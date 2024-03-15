@@ -26,17 +26,20 @@ export const GetBlog = async (req: Request, res: Response, next: NextFunction) =
     const { blog_id } = req.params
     if (blog_id) {
         try {
-            const blog:any = await Blog.findOne({ _id: blog_id });
+            const blog = await Blog.findOne({ _id: blog_id });
             if (!blog) {
-                return res.status(200).json({ message: "No Blog Found", blog });
+                return res.status(404).json({ message: "No Blog Found" });
             }
-            const blogsWithComments = await Promise.all(blog.map(async (blog: any) => {
-                const comments = await Comment.find({ blog: blog._id });
-                return { ...blog.toJSON(), comments };
-            }));
-            return res.status(200).json({ message: "Blog fetched successfully", blogsWithComments });
+
+            const comments = await Comment.find({ blog: blog._id });
+            const blogWithComments = {
+                ...blog.toJSON(),
+                comments
+            };
+
+            return res.status(200).json({ message: "Blog fetched successfully", blog: blogWithComments });
         } catch (error) {
-            return res.status(500).json({ message: "Internal server error" });
+            return res.status(500).json({ message: "Internal server error", blog_id });
         }
     }
     try {
