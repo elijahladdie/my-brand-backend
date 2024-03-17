@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { Blog, BlogDoc } from '../models/Blog';
+import { Blog } from '../models/Blog';
 import { CreateBlogPayload } from '../dto/Auth.dto';
 import uploadFile from '../utility/cloudinary';
 import { Comment } from '../models/Comment';
 
 
 export const CreateBlog = async (req: Request, res: Response, next: NextFunction) => {
-    const { blogTitle, blogBody, comments, } = req.body as CreateBlogPayload;
+    const { blogTitle, blogBody, comments} = req.body as CreateBlogPayload;
     const existingBlog = await Blog.findOne({ blogTitle });
     if (existingBlog) {
         return res.json({ "Message": "Blog already exists" });
@@ -19,7 +19,7 @@ export const CreateBlog = async (req: Request, res: Response, next: NextFunction
     const CreatedBlog = await Blog.create({
         blogTitle, blogBody, comments, likes: 0, blogImage: blogImage.secure_url
     });
-    return res.json({ message: "Blog Created successfully", CreatedBlog });
+    return res.json({ message: "Blog Created successfully", data:CreatedBlog });
 }
 
 export const GetBlog = async (req: Request, res: Response, next: NextFunction) => {
@@ -37,9 +37,9 @@ export const GetBlog = async (req: Request, res: Response, next: NextFunction) =
                 comments
             };
 
-            return res.status(200).json({ message: "Blog fetched successfully", blog: blogWithComments });
+            return res.status(200).json({ message: "Blog fetched successfully", data: blogWithComments });
         } catch (error) {
-            return res.status(500).json({ message: "Internal server error", blog_id });
+            return res.status(500).json({ message: "Internal server error" });
         }
     }
     try {
@@ -53,7 +53,7 @@ export const GetBlog = async (req: Request, res: Response, next: NextFunction) =
             const comments = await Comment.find({ blog: blog._id });
             return { ...blog.toJSON(), comments };
         }));
-        return res.status(200).json({ message: "Blog fetched successfully", blogsWithComments });
+        return res.status(200).json({ message: "Blog fetched successfully", data: blogsWithComments });
     } catch (error) {
         return res.status(500).json({ message: "Internal server error", error });
     }
@@ -77,7 +77,7 @@ export const updateBlog = async (req: Request, res: Response, next: NextFunction
             existingBlog.blogImage = blogImage.secure_url;
         }
         const updatedBlog = await Blog.findByIdAndUpdate({ _id: blog_id }, existingBlog, { new: true })
-        return res.json({ message: "Blog updated successfully", updatedBlog });
+        return res.json({ message: "Blog updated successfully",data: updatedBlog });
     } catch (error) {
         return res.status(500).json({ "Message": "Internal server error" });
     }
@@ -119,7 +119,7 @@ export const deleteBlog = async (req: Request, res: Response,) => {
 export const createComment = async (req: Request, res: Response) => {
     try {
         const { blog_id } = req.params;
-        const { comment } = req.body;
+        const { comment ,name} = req.body;
 
         const existingBlog: any = await Blog.findById(blog_id);
         if (!existingBlog) {
@@ -127,11 +127,12 @@ export const createComment = async (req: Request, res: Response) => {
         }
         const newComment = await Comment.create({
             comment,
+            name,
             blog: existingBlog._id
         });
         existingBlog.comments.push(newComment._id);
         const updated = await Blog.findByIdAndUpdate({ _id: blog_id, existingBlog }, { new: true })
-        res.status(201).json({ message: 'Comment created successfully', comment: newComment });
+        res.status(201).json({ message: 'Comment created successfully', data: newComment });
     } catch (error) {
         console.error('Error creating comment:', error);
         res.status(500).json({ error: 'Internal server error' });

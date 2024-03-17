@@ -14,7 +14,22 @@ export const CreateBlogValidationError = (req: Request, res: Response, next: Nex
     const { error } = CreateBlog.validate(req.body);
        if (error) {
         // Handle validation error
-        return res.status(400).json({ error: error.details.map((err: any) => err.message) });
+        return res.status(400).json({ error: error.details[0].message.replace( /"/g,"")});
+    }
+    next();
+};
+const createComment = Joi.object({
+    comment: Joi.string().required(),
+    name: Joi.string().required(),
+}).options({ abortEarly: false });
+
+export const CreateCommentValidationError = (req: Request, res: Response, next: NextFunction) => {
+   
+    const { error } = createComment.validate(req.body);
+       if (error) {
+        // Handle validation error
+        return res.status(400).json({ error: error.details[0].message.replace( /"/g,"")});
+
     }
     next();
 };
