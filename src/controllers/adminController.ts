@@ -41,9 +41,8 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
             return res.status(401).json({ message: "Incorrect password" });
         }
         const { fullName} = admin
-        return res.status(200).json({ message: "Login successful",fullName, token: signToken({email,fullName}) });
+        return res.status(200).json({ message: "Login successful",name: fullName, token: signToken({email,fullName}) });
     } catch (error) {
-        console.error("Error logging in:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -52,14 +51,11 @@ export const GetAdmin = async (req: Request, res: Response, next: NextFunction) 
 
     try {
         const admin = await Admin.find();
-
         if (!admin) {
-
             return res.status(200).json({ message: "No Admin ", admin });
         }
         return res.status(200).json({ message: "Admin fetched successful", admin });
     } catch (error) {
-        console.error("Error logging in:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
