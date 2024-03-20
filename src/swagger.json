@@ -1,0 +1,479 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Kuradusenge API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://my-brand-backend-vq8n.onrender.com",
+            "description": "Live Production Server",
+            "variables": {}
+        },
+        {
+            "url": "http://localhost:5000",
+            "description": "Local Development Server",
+            "variables": {}
+        }
+    ],
+    "paths": {
+        "/admin/access/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign In",
+                "operationId": "SignIn",
+                "parameters": [],
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignIn"
+                            },
+                            "example": {
+                                "email": "Kuradusenge@gmail.com",
+                                "password": "Kuradusenge"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/admin/create": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "create user ",
+                "operationId": "CreateUser",
+                "parameters": [],
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateUser"
+                            },
+                            "example": {
+                                "email": "Kura@gmail.com",
+                                "fullName": "Doe Joe",
+                                "password": "*****************",
+                                "recoveryPassword": "*****************"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/admin": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "get users",
+                "operationId": "GetUsers",
+                "parameters": [],
+                "security": [
+                    {
+                        "bearerToken": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/blog/create": {
+            "post": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Create Blog Record",
+                "operationId": "CreateBlogRecord",
+                "parameters": [],
+                "security": [
+                    {
+                        "bearerToken": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/CreateBlogRecordRequest"
+                                    },
+                                    {
+                                        "example": {
+                                            "blogTitle": "Just in case you didn't know",
+                                            "blogBody": "You can provide blog body here",
+                                            "blogImage": "File must be uploaded"
+                                        }
+                                    }
+                                ]
+                            },
+                            "example": {
+                                "blogTitle": "Just in case you didn't know",
+                                "blogBody": "You can provide blog body here",
+                                "blogImage": "File must be uploaded"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "headers": {}
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        
+        "/blog/{blog_id}/comment": {
+            "post": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Comment Blog Record",
+                "operationId": "CommentBlogRecord",
+                "parameters": [
+                    {
+                        "name": "blog_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerToken": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/CommentBlogRecord"
+                                    }
+                                ],
+                                "example": {
+                                    "comment": "Just in case you didn't know",
+                                    "name": "Kamanzi"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "headers": {}
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/blog/all": {
+            "get": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Get all blogs",
+                "operationId": "Getblogs",
+                "parameters": [],
+                "security": [
+                    {
+                        "bearerToken": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "headers": {}
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/blog/byid/{blog_id}": {
+            "get": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Get Blog By Id",
+                "operationId": "GetBlogById",
+                "parameters": [
+                    {
+                        "name": "blog_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerToken": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "headers": {}
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/blog/update/{blog_id}": {
+            "put": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Update Blog Record",
+                "operationId": "UpdateBlogRecord",
+                "parameters": [
+                    {
+                        "name": "blog_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerToken": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/UpdateBlogRecordRequest"
+                                    },
+                                    {
+                                        "example": {
+                                            "blogTitle": "Just in case you didn't know",
+                                            "blogBody": "You can provide blog body here",
+                                            "blogImage": "File must be uploaded"
+                                        }
+                                    }
+                                ]
+                            },
+                            "example": {
+                                "blogTitle": "Just in case you didn't know",
+                                "blogBody": "You can provide blog body here",
+                                "blogImage": "File must be uploaded"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "headers": {}
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/blog/like/{blog_id}": {
+            "put": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Like Blog Record",
+                "operationId": "LikeBlogRecord",
+                "parameters": [
+                    {
+                        "name": "blog_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerToken": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "headers": {}
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/blog/delete/{blog_id}": {
+            "delete": {
+                "tags": [
+                    "Blog"
+                ],
+                "summary": "Delete Blog Record",
+                "operationId": "DeleteBlogRecord",
+                "parameters": [
+                    {
+                        "name": "blog_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerToken": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "headers": {}
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "SignIn": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
+            "CreateUser": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "fullName": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "recoveryPassword": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "email",
+                    "fullName",
+                    "password",
+                    "recoveryPassword"
+                ]
+            },
+            "UpdateBlogRecordRequest": {
+                "type": "object",
+                "properties": {
+                    "blogTitle": {
+                        "type": "string"
+                    },
+                    "blogBody": {
+                        "type": "string"
+                    },
+                    "blogImage": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "blogTitle",
+                    "blogBody",
+                    "blogImage"
+                ]
+            },
+            "CreateBlogRecordRequest": {
+                "type": "object",
+                "properties": {
+                    "blogTitle": {
+                        "type": "string"
+                    },
+                    "blogBody": {
+                        "type": "string"
+                    },
+                    "blogImage": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "blogTitle",
+                    "blogBody",
+                    "blogImage"
+                ]
+            },
+            "CommentBlogRecord": {
+                "type": "object",
+                "properties": {
+                    "comment": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "comment",
+                    "name"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "bearerToken": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}
