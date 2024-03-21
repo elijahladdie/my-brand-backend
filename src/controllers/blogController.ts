@@ -19,7 +19,7 @@ export const CreateBlog = async (req: Request, res: Response, next: NextFunction
     const CreatedBlog = await Blog.create({
         blogTitle, blogBody, comments, likes: 0, blogImage: blogImage.secure_url
     });
-    return res.json({ message: "Blog Created successfully", data:CreatedBlog });
+    return res.status(201).json({ message: "Blog Created successfully", data:CreatedBlog });
 }
 
 export const GetBlog = async (req: Request, res: Response, next: NextFunction) => {
