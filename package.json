@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles --forceExit",
-    "coverage":"jest --collect-coverage",
+    "coverage":"jest --collect-coverage --detectOpenHandles",
 
     "dev": "nodemon src/index.ts",
     "start": "node  dist/index.js",
