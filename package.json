@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage --coverageReporters=json-summary --runInBand --detectOpenHandles --forceExit",
+    "test": "jest --runInBand --detectOpenHandles --forceExit",
+    "coverage":"jest --collect-coverage",
+
     "dev": "nodemon src/index.ts",
     "start": "node  dist/index.js",
     "build": "tsc -p .",
