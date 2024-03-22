@@ -278,25 +278,13 @@
                 "requestBody": {
                     "description": "",
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "allOf": [
                                     {
                                         "$ref": "#/components/schemas/UpdateBlogRecordRequest"
-                                    },
-                                    {
-                                        "example": {
-                                            "blogTitle": "Just in case you didn't know",
-                                            "blogBody": "You can provide blog body here",
-                                            "blogImage": "File must be uploaded"
-                                        }
                                     }
                                 ]
-                            },
-                            "example": {
-                                "blogTitle": "Just in case you didn't know",
-                                "blogBody": "You can provide blog body here",
-                                "blogImage": "File must be uploaded"
                             }
                         }
                     },
@@ -424,14 +412,9 @@
                         "type": "string"
                     },
                     "blogImage": {
-                        "type": "string"
+                        "type": "file"
                     }
-                },
-                "required": [
-                    "blogTitle",
-                    "blogBody",
-                    "blogImage"
-                ]
+                }
             },
             "CreateBlogRecordRequest": {
                 "type": "object",
@@ -443,7 +426,7 @@
                         "type": "string"
                     },
                     "blogImage": {
-                        "type": "string"
+                        "type": "file"
                     }
                 },
                 "required": [
