@@ -4,9 +4,9 @@ import mongoose from 'mongoose';
 
 const randomNum = Math.floor(Math.random() * 2002) +2
 const adminPayload = {
-  email: "Mukiza@gmail.com" + randomNum,
+  email: process.env.TEST_EMAIL as string + randomNum,
   fullName: "Mukiza" + randomNum,
-  password: "Mukiza",
+  password: process.env.TEST_PASSWORD,
   recoveryPassword: process.env.TEST_PASSWORD
 }
 
