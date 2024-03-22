@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
 import { Blog } from '../models/Blog';
 import { CreateBlogPayload } from '../dto/Auth.dto';
@@ -5,8 +6,12 @@ import uploadFile from '../utility/cloudinary';
 import { Comment } from '../models/Comment';
 
 
+function isObjectId(value: any): boolean {
+    return Types.ObjectId.isValid(value);
+}
+
 export const CreateBlog = async (req: Request, res: Response, next: NextFunction) => {
-    const { blogTitle, blogBody, comments} = req.body as CreateBlogPayload;
+    const { blogTitle, blogBody, comments } = req.body as CreateBlogPayload;
     const existingBlog = await Blog.findOne({ blogTitle });
     if (existingBlog) {
         return res.json({ "Message": "Blog already exists" });
@@ -19,7 +24,7 @@ export const CreateBlog = async (req: Request, res: Response, next: NextFunction
     const CreatedBlog = await Blog.create({
         blogTitle, blogBody, comments, likes: 0, blogImage: blogImage.secure_url
     });
-    return res.status(201).json({ message: "Blog Created successfully", data:CreatedBlog });
+    return res.status(201).json({ message: "Blog Created successfully", data: CreatedBlog });
 }
 
 export const GetBlog = async (req: Request, res: Response, next: NextFunction) => {
@@ -61,8 +66,13 @@ export const GetBlog = async (req: Request, res: Response, next: NextFunction) =
 
 export const updateBlog = async (req: Request, res: Response, next: NextFunction) => {
     const { blog_id } = req.params;
+
+    if (!blog_id || !isObjectId(blog_id)) {
+        return res.status(401).json({ "Message": "Invalid blog ID" });
+    }
+
     const { blogTitle, blogBody, comments } = req.body as CreateBlogPayload;
-    const existingBlog: any = await Blog.findById(blog_id);
+    const existingBlog: any = await Blog.findById({ _id: blog_id });
     if (!existingBlog) {
         return res.status(404).json({ "Message": "Blog not found" });
     }
@@ -77,7 +87,7 @@ export const updateBlog = async (req: Request, res: Response, next: NextFunction
             existingBlog.blogImage = blogImage.secure_url;
         }
         const updatedBlog = await Blog.findByIdAndUpdate({ _id: blog_id }, existingBlog, { new: true })
-        return res.json({ message: "Blog updated successfully",data: updatedBlog });
+        return res.json({ message: "Blog updated successfully", data: updatedBlog });
     } catch (error) {
         return res.status(500).json({ "Message": "Internal server error" });
     }
@@ -85,7 +95,13 @@ export const updateBlog = async (req: Request, res: Response, next: NextFunction
 
 export const likeBlog = async (req: Request, res: Response, next: NextFunction) => {
     const { blog_id } = req.params;
-    const existingBlog: any = await Blog.findById(blog_id);
+
+
+    if (!blog_id || !isObjectId(blog_id)) {
+        return res.status(401).json({ "Message": "Invalid blog ID" });
+    }
+
+    const existingBlog: any = await Blog.findById({ _id: blog_id });
     if (!existingBlog) {
         return res.status(404).json({ "Message": "Blog not found" });
     }
@@ -102,10 +118,15 @@ export const likeBlog = async (req: Request, res: Response, next: NextFunction) 
 
 export const deleteBlog = async (req: Request, res: Response,) => {
     const { blog_id } = req.params;
+    
+    if (!blog_id || !isObjectId(blog_id)) {
+        return res.status(401).json({ "Message": "Invalid blog ID" });
+    }
+
     try {
         const blog = await Blog.findOneAndDelete({ _id: blog_id });
         if (!blog) {
-            return res.status(401).json({ message: "Blog not Found" });
+            return res.status(404).json({ message: "Blog not Found" });
         }
         res.status(201).json({
             message: "Blog successful removed!",
@@ -119,9 +140,9 @@ export const deleteBlog = async (req: Request, res: Response,) => {
 export const createComment = async (req: Request, res: Response) => {
     try {
         const { blog_id } = req.params;
-        const { comment ,name} = req.body;
+        const { comment, name } = req.body;
 
-        const existingBlog: any = await Blog.findById(blog_id);
+        const existingBlog: any = await Blog.findById({ _id: blog_id });
         if (!existingBlog) {
             return res.status(404).json({ error: 'Blog post not found' });
         }
