@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { Admin } from '../models/Admin'; 
+import { Admin } from '../models/Admin';
 import { GeneratePassword, GenerateSalt, comparePassword } from '../utility/passwordUtility';
-import { CreateAuthPayload } from '../dto/Auth.dto'; 
+import { CreateAuthPayload } from '../dto/Auth.dto';
 import { signToken } from '../utility/Authentication';
 
 
@@ -21,11 +21,16 @@ export const RegisterAdmin = async (req: Request, res: Response, next: NextFunct
         email,
         fullName,
         password: userPassword,
-        recoveryPassword:userRecPassword,
+        recoveryPassword: userRecPassword,
     });
 
 
-    return res.status(201).json({ message: " New admin registered",CreatedAdmin});
+    return res.status(201).json({
+        message: " New admin registered", data: {
+            email: CreatedAdmin.email,
+            Names: CreatedAdmin.fullName
+        }
+    });
 }
 
 export const Login = async (req: Request, res: Response, next: NextFunction) => {
@@ -40,8 +45,8 @@ export const Login = async (req: Request, res: Response, next: NextFunction) => 
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Incorrect password" });
         }
-        const { fullName} = admin
-        return res.status(200).json({ message: "Login successful",name: fullName, token: signToken({email,fullName}) });
+        const { fullName } = admin
+        return res.status(200).json({ message: "Login successful", name: fullName, token: signToken({ email, fullName }) });
     } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
     }

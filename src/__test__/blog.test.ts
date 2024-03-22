@@ -1,9 +1,10 @@
 import supertest from "supertest";
-import mongoose,{ConnectOptions} from "mongoose";
+import mongoose, { ConnectOptions } from "mongoose";
 import { app, server } from "../index";
+const randomNum = Math.floor(Math.random() * 2002) +2
 
 const blogPayload = {
-  blogTitle: "Test Blog",
+  blogTitle: "Test Blog"+ randomNum,
   blogBody: "Lorem ipsum dolor sit amet",
   blogImage: {
     fieldname: "blogImage",
@@ -13,41 +14,39 @@ const blogPayload = {
     destination: "/tmp",
     filename: "test-image.jpg",
     path: "/tmp/test-image.jpg",
-    size: 1000, 
+    size: 1000,
   },
-  };
+};
 
-  export const userPayload = {
-    "email": process.env.TEST_EMAIL as string,
-    "password": process.env.TEST_PASSWORD as string
-  }
+export const userPayload = {
+  "email": process.env.TEST_EMAIL as string,
+  "password": process.env.TEST_PASSWORD as string
+}
 
 import { blogRoutes } from "../routes/blogRoutes";
 
-  const blogId = process.env.TEST_BLOGID as string;
-  let authToken: string;
+// const blogId = proce
+let authToken: string;
+let blogId: string;
 
-  const authorizeRequests = async () => {
-    const loginResponse = await supertest(app)
-      .post("/admin/access/login")
-      .send(userPayload);
-    authToken = loginResponse.body.token;
-  };
+const authorizeRequests = async () => {
+  const loginResponse = await supertest(app)
+    .post("/admin/access/login")
+    .send(userPayload);
+  authToken = loginResponse.body.token;
+};
 
 
-  describe("Blog Routes", () => {
+describe("Blog Routes", () => {
 
   beforeAll(async () => {
     app.use("/blog", blogRoutes);
 
     try {
-      const options: ConnectOptions = {
-        dbName: 'my_brand_test',
-      };
-      await mongoose.connect(process.env.MONGO_DB_TEST as string,options);
+
       await authorizeRequests();
     } catch (error) {
-      console.log("Error connecting to MongoDB:", error);
+      console.log("Error Authorizing requests:", error);
     }
   });
 
@@ -59,25 +58,25 @@ import { blogRoutes } from "../routes/blogRoutes";
       const response = await supertest(app).get("/blog/all").set("Authorization", `Bearer ${authToken}`);
       expect(response.status).toBe(200);
       expect(response.body).toBeDefined;
+      blogId = <any>response.body.data[0]._id
     }, 10000);
   });
-
-  describe("GET /blog/byid/:blog_id", () => {
-    it("should return a single blog by ID", async () => {
-      const response = await supertest(app).get(`/blog/byid/${blogId}`).set("Authorization", `Bearer ${authToken}`);
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty("message", "Blog fetched successfully");
-    });
-  });
-
   describe("POST /blog/create", () => {
     it("should create return error in creating new blog", async () => {
-      const response = await supertest(app).post("/blog/create").send(blogPayload).set("Authorization", `Bearer ${authToken}`);
+      const response: any = await supertest(app).post("/blog/create").send(blogPayload).set("Authorization", `Bearer ${authToken}`);
+ 
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty("message", "No file uploaded");
     });
   });
+  describe("GET /blog/byid/:blog_id", () => {
+    it("should return a single blog by ID", async () => {
+      const response = await supertest(app).get(`/blog/byid/${blogId}`).set("Authorization", `Bearer ${authToken}`);
 
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("message", "Blog fetched successfully");
+    });
+  });
 
   describe("PUT /blog/like/:blog_id", () => {
     it("should like a blog", async () => {
