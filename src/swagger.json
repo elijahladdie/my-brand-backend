@@ -34,8 +34,8 @@
                                 "$ref": "#/components/schemas/SignIn"
                             },
                             "example": {
-                                "email": "Kuradusenge@gmail.com",
-                                "password": "Kuradusenge"
+                                "email": "example@example.com",
+                                "password": "example"
                             }
                         }
                     },
