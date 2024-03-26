@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand --detectOpenHandles --forceExit",
-    "coverage":"jest --collect-coverage --detectOpenHandles",
-
+    "coverage": "jest --collect-coverage --detectOpenHandles",
     "dev": "nodemon src/index.ts",
     "start": "node  dist/index.js",
     "build": "tsc -p .",
@@ -34,6 +33,7 @@
     "typescript": "^5.4.2"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.0.3",
     "cors": "^2.8.5",
