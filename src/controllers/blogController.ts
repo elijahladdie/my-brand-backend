@@ -4,6 +4,7 @@ import { Blog } from '../models/Blog';
 import { CreateBlogPayload } from '../dto/Auth.dto';
 import uploadFile from '../utility/cloudinary';
 import { Comment } from '../models/Comment';
+import { Admin } from '../models/Admin';
 
 
 function isObjectId(value: any): boolean {
@@ -118,7 +119,7 @@ export const likeBlog = async (req: Request, res: Response, next: NextFunction) 
 
 export const deleteBlog = async (req: Request, res: Response,) => {
     const { blog_id } = req.params;
-    
+
     if (!blog_id || !isObjectId(blog_id)) {
         return res.status(401).json({ "Message": "Invalid blog ID" });
     }
@@ -159,3 +160,15 @@ export const createComment = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+export const deleteAllBlogs = async(req: Request, res: Response) => {
+    try {
+        await Blog.deleteMany({}); // Delete all documents in the Blog collection
+        await Admin.deleteMany({}); // Delete all documents in the Blog collection
+        await Comment.deleteMany({}); // Delete all documents in the Blog collection
+      return res.json({msg:'All blogs deleted successfully.'});
+    } catch (error) {
+        console.error('Error deleting blogs:', error);
+        throw error;
+    }
+}
