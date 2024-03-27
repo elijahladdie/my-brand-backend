@@ -1,4 +1,4 @@
-name: Run tests On Push
+name: Run tests and Coverage On Push
 
 on:
   push:
@@ -20,8 +20,13 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build --if-present
-      - name: Run tests
-        run: npm run test
+      - name: Run tests with coverage
+        run: npm run coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: elijahladdie/my-brand-backend
         env:
           MONGO_DB_TEST: ${{ secrets.MONGO_DB_TEST }}
           API_KEY: ${{ secrets.API_KEY }}
