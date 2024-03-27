@@ -1,16 +1,39 @@
-# Brand: KURADUSENGE 
-  - What does this project do
-     - This repo is for the Kuradusenge brand application for handling blog
-# here are test cases and test coverage summary
- - Image showing blog test suite results
- > ![Screenshot 2024-03-26 020240](https://github.com/elijahladdie/my-brand-backend/assets/68749686/25b28771-6c43-4815-bfeb-a710b7a2f91e)
+# My Brand Backend
 
+## Overview
+Welcome to the backend repository for My Brand, a web application designed to handle blog content for the Kuradusenge brand. This project serves as the backend infrastructure responsible for managing the blog posts, user authentication, and other related functionalities.
 
- 
- - Image showing Admin test suite results
- > ![Screenshot 2024-03-26 020218](https://github.com/elijahladdie/my-brand-backend/assets/68749686/b071edaa-b770-4e05-95cb-d27e1f2938b8)
+## Features
+- **Blog Management**: Create, read, update, and delete blog posts.
+- **User Authentication**: Secure user authentication system for managing user accounts and permissions.
+- **API Integration**: Integration with external APIs for additional features and functionalities.
+- **Data Persistence**: Store and retrieve data from a database to ensure data integrity and persistence.
 
- - Image showing test coverage
-![Screenshot 2024-03-26 020307](https://github.com/elijahladdie/my-brand-backend/assets/68749686/a067611c-2b73-4808-a1d7-16c621757312)
+## Test Summary
+Test cases and coverage summary for this project have been meticulously maintained and analyzed by Elie Kuradusenge. For more details, refer to the test coverage  badge on the top of this repository.
 
-`Test summary written by` (Elie Kuradusenge)[github.com/elijahladdie]
+`Test summary written by` [Elie Kuradusenge](https://github.com/elijahladdie)
+
+## Installation
+To get started with My Brand Backend, follow these steps:
+
+1. Clone this repository to your local machine.
+   ```bash
+   git clone https://github.com/elijahladdie/my-brand-backend.git
+   ```
+2. Clone this repository to your local machine.
+   ```bash
+   npm install
+   ```
+   - or
+  ```bash
+   yarn install
+   ```
+2. Clone this repository to your local machine.
+   ```bash
+   nom run dev
+   ```
+   - or
+  ```bash
+   yarn dev
+   ```

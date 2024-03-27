@@ -1,10 +1,18 @@
-name: Run tests and Coverage On Push
+name: Run tests On Push
 
 on:
   push:
     branches: [develop]
   pull_request:
     branches: [develop]
+
+env:
+  MONGO_DB_TEST: ${{ secrets.MONGO_DB_TEST }}
+  API_KEY: ${{ secrets.API_KEY }}
+  API_SECRET: ${{ secrets.API_SECRET }}
+  TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+  TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+  APP_ENV: testing
 
 jobs:
   build:
@@ -27,10 +35,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: elijahladdie/my-brand-backend
-        env:
-          MONGO_DB_TEST: ${{ secrets.MONGO_DB_TEST }}
-          API_KEY: ${{ secrets.API_KEY }}
-          API_SECRET: ${{ secrets.API_SECRET }}
-          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
-          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-          APP_ENV: testing
+      - name: Run tests
+        run: npm run test
+       
