@@ -1,4 +1,4 @@
-# My Brand Backend
+# My Brand Backend [![codecov](https://codecov.io/gh/elijahladdie/my-brand-backend/graph/badge.svg?token=SWYIXW2KO4)](https://codecov.io/gh/elijahladdie/my-brand-backend)
 
 ## Overview
 Welcome to the backend repository for My Brand, a web application designed to handle blog content for the Kuradusenge brand. This project serves as the backend infrastructure responsible for managing the blog posts, user authentication, and other related functionalities.
